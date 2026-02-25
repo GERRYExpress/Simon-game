@@ -25,6 +25,9 @@ const handleClick = (event) => {
     } else {
         let userChosenColour = event.target.id.toString();
         userClickedPattern.push(userChosenColour);
+        if (userClickedPattern.length > gamePattern.length) {
+            gameOver();
+        }
         playSound(userChosenColour);
         animatePress(userChosenColour);
         checkAnswer(level);
@@ -71,17 +74,24 @@ const checkAnswer = (currentLevel) => {
     const lastIndex = userClickedPattern.length - 1;
     if (userClickedPattern[lastIndex] === gamePattern[lastIndex]) {
         if (userClickedPattern.length === gamePattern.length) {
-            userClickedPattern = [];
-            setTimeout(nextSequence, 1000);
+            setTimeout(() => {
+                userClickedPattern = [];
+                nextSequence()
+            }, 1000);
         }
     } else {
-        sounds[4].play();
-        $('body').addClass('game-over');
-        setTimeout(() => {
-            $('body').removeClass('game-over');
-        }, 200);
-        $('#level-title').text(`Game Over, Press Any Key to Restart`);
+        gameOver();
     }
+}
+
+const gameOver = () => {
+    sounds[4].play();
+    $('body').addClass('game-over');
+    setTimeout(() => {
+        $('body').removeClass('game-over');
+    }, 200);
+    $('#level-title').text(`Game Over, Press Any Key to Restart`);
+    return;
 }
 
 
